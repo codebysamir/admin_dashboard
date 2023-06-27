@@ -8,7 +8,7 @@ export default function Widget({ type }) {
     
 
   return (
-    <div className='flex gap-16 justify-between p-8 shadow-2xl min-w-[300px] max-w-[320px] rounded-md hover:bg-slate-100'>
+    <div className='flex gap-16 justify-between p-8 shadow-2xl min-w-[300px] max-w-[320px] rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900'>
         <div className='flex flex-col gap-8 justify-between max-w-[110px]'>
             <span className='text-gray-500 text-2xl font-semibold'>{data?.title}</span>
             <div className='flex gap-4 whitespace-pre-line'>

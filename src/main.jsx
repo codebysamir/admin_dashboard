@@ -16,11 +16,18 @@ import EditProduct from './Pages/EditProduct.jsx';
 import CreateProduct from './Pages/CreateProduct.jsx';
 import Product from './Pages/Product.jsx';
 import User from './Pages/User.jsx';
+import Login from './Pages/Login.jsx';
+import Root from './Root.jsx';
+import AuthProvider from './hooks/AuthContext.jsx';
+import Orders from './Pages/Orders.jsx';
+import CreateOrder from './Pages/CreateOrder.jsx';
+import Order from './Pages/Order.jsx';
+import EditOrder from './Pages/EditOrder.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Root />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -36,7 +43,7 @@ const router = createBrowserRouter([
         element: <User />,
       },
       {
-        path: "/edit-user",
+        path: "/edit-user/:id",
         element: <EditUser />,
       },
       {
@@ -52,15 +59,40 @@ const router = createBrowserRouter([
         element: <Product />,
       },
       {
-        path: "/edit-product",
+        path: "/edit-product/:id",
         element: <EditProduct />,
       },
       {
         path: "/create-product",
         element: <CreateProduct />,
       },
+      {
+        path: "/orders",
+        element: <Orders />,
+      },
+      {
+        path: "/create-order",
+        element: <CreateOrder />,
+      },
+      {
+        path: "/order/:id",
+        element: <Order />,
+      },
+      {
+        path: "/edit-order/:id",
+        element: <EditOrder />,
+      },
     ]
   },
+  {
+    path: "/login",
+    element: (
+    <AuthProvider>
+      <Login />
+    </AuthProvider>
+    ),
+    // errorElement: <ErrorPage />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

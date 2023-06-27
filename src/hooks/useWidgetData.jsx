@@ -1,8 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AccountBalanceOutlined, ArrowDownward, ArrowUpward, PaidOutlined, PersonOutlined, ShoppingBagOutlined } from '@mui/icons-material'
+import { UserContext } from './UserContext'
+import { OrderContext } from './OrderContext'
 
 export default function useWidgetData(type) {
     const [value, setValue] = useState()
+    const { users, loading } = useContext(UserContext)
+    const { getMonthlyIncomeRequest, orders, income } = useContext(OrderContext)
+
+    useEffect(() => {
+        const controller = new AbortController()
+        getMonthlyIncomeRequest(controller)
+
+        return () => controller.abort()
+    }, [])
 
     useEffect(() => {
         switch (type.toUpperCase()) {
@@ -11,8 +22,9 @@ export default function useWidgetData(type) {
                     title: 'EARNINGS',
                     isMoney: true,
                     amount: () => {
-                        // getAllOrders Fetch .total
-                        const amount = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' }).format(4000)
+                        console.log(income)
+                        const earnings = income.length ? income[0].total : null
+                        const amount = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' }).format(earnings)
                         return amount
                     },
                     diffAmount: () => {
@@ -32,7 +44,7 @@ export default function useWidgetData(type) {
                     isMoney: false,
                     amount: () => {
                         // getAllOrders Fetch .total
-                        const amount = 500
+                        const amount = orders.length
                         return amount
                     },
                     diffAmount: () => {
@@ -51,8 +63,8 @@ export default function useWidgetData(type) {
                     title: 'USERS',
                     isMoney: false,
                     amount: () => {
-                        // getAllOrders Fetch .total
-                        const amount = 150
+                        // getAllUsersRequest()
+                        const amount = loading ? '...loading' : users.length
                         return amount
                     },
                     diffAmount: () => {
@@ -71,8 +83,9 @@ export default function useWidgetData(type) {
                     title: 'BALANCE',
                     isMoney: true,
                     amount: () => {
-                        // getAllOrders Fetch .total
-                        const amount = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' }).format(12500)
+                        let balance = 0
+                        if (income.length) income.forEach(month => balance += month.total)
+                        const amount = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' }).format(balance)
                         return amount
                     },
                     diffAmount: () => {
@@ -89,7 +102,7 @@ export default function useWidgetData(type) {
             default:
                 break;
         }
-    }, [])
+    }, [users, orders, loading, income])
 
   return [value, setValue]
 }
